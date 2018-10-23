@@ -13,6 +13,7 @@
             Sprite = PIXI.Sprite,
             Rectangle = PIXI.Rectangle;
             let pigion = null;
+            let state;
 
             let type = "WebGL"
             let width = 607;//window.innerWidth - 20;
@@ -52,8 +53,18 @@
                 pigion = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);
                 pigion.gotoAndPlay(0);
                 pigion.animationSpeed=0.3;
-                pigion.scale.x = 0.2;
-                pigion.scale.y = 0.2;
+                pigion.baseScale = 0.2;
+                pigion.scale.x = pigion.baseScale;
+                pigion.scale.y = pigion.baseScale;
+                pigion.anchor.x = 0.5;
+                pigion.anchor.y = 0.5;
+                pigion.y = height/2;
+                pigion.x = width/2;
+                pigion.direction = 1;
+                pigion.vx = 0;
+                pigion.vy = 0.05;
+                pigion.isOnGround = false;
+
 
                 background.width = width;
                 background.height = height;
@@ -61,6 +72,67 @@
                 app.stage.addChild(background);
                 app.stage.addChild(pigion);
 
+                let left = keyboard(37),
+                    up = keyboard(38),
+                    right = keyboard(39),
+                    down = keyboard(40),
+                    space = keyboard(32);
+
+                space.press = () => {
+                    alert(pigion.y);
+                }
+
+                right.press = () => {
+                    pigion.vx = 1;
+                    
+                    if(pigion.direction === -1){
+                        pigion.rotation = 0;
+                        pigion.scale.x *= -1;
+                    }
+                    pigion.direction = 1;
+                };
+                right.release = () => {
+                    pigion.vx = 0;
+                };
+
+                left.press = () => {
+                    pigion.vx = -1;
+                    if(pigion.direction === 1){
+                        pigion.rotation = 0;
+                        pigion.scale.x *= -1;
+                    }
+                    pigion.direction = -1;
+                };
+                left.release = () => {
+                    pigion.vx = 0;
+                };
+
+                up.press = () => {
+                    pigion.vy = -0.7;
+                    pigion.vx += 0.3 * pigion.direction;
+                    pigion.rotation = pigion.direction * -Math.PI /8;
+                };
+                up.release = () => {
+                    pigion.vy = 0.1;
+                    pigion.vx = !left.isDown && !right.isDown ? 0 : pigion.vx - 0.3 * pigion.direction;
+                    pigion.rotation = 0;
+                };
+
+                down.press = () => {
+                    if(pigion.isOnGround)
+                        return;
+                    pigion.vy = 1;
+                    pigion.vx += 0.8 * pigion.direction;
+                    pigion.rotation = pigion.direction * Math.PI /4;
+                };
+                down.release = () => {
+                    pigion.vy = 0.1;
+                    pigion.vx = !left.isDown && !right.isDown ? 0 : pigion.vx - 0.8 * pigion.direction;
+                    pigion.rotation = 0;
+                };
+
+                state = play
+                gameLoop();
             }
 
             function createAnimatedSprite(sheet, frameName , startFrame, frameCount) {
@@ -76,13 +148,71 @@
                 
             function gameLoop(delta){
                 requestAnimationFrame(gameLoop);
-                if(pigion != null)
-                    pigion.x += 1;
+
+                state(delta);
             }
 
-            gameLoop();
+            function play(delta){
+                updatePlayer(delta);
+            }
+
+            function updatePlayer(delta){
+                pigion.x += pigion.vx;
+                pigion.y += pigion.vy;  
+
+                if(pigion.y <= 10)
+                    pigion.y = 10;
+                if(pigion.y >= 415) {
+                    pigion.y = 415;
+                    pigion.gotoAndStop(7);
+                    pigion.isOnGround = true;
+                } else {
+                    if(!pigion.playing){
+                        pigion.play();
+                        pigion.isOnGround = false;
+                    }
+                }
+            }
+
             
             document.body.appendChild(app.view);
+
+            function keyboard(keyCode) {
+                let key = {};
+                key.code = keyCode;
+                key.isDown = false;
+                key.isUp = true;
+                key.press = undefined;
+                key.release = undefined;
+                //The `downHandler`
+                key.downHandler = event => {
+                    if (event.keyCode === key.code) {
+                    if (key.isUp && key.press) key.press();
+                    key.isDown = true;
+                    key.isUp = false;
+                       
+                    event.preventDefault();}
+                };
+
+                //The `upHandler`
+                key.upHandler = event => {
+                    if (event.keyCode === key.code) {
+                    if (key.isDown && key.release) key.release();
+                    key.isDown = false;
+                    key.isUp = true;
+                    
+                    event.preventDefault();}
+                };
+
+                //Attach event listeners
+                window.addEventListener(
+                    "keydown", key.downHandler.bind(key), false
+                );
+                window.addEventListener(
+                    "keyup", key.upHandler.bind(key), false
+                );
+                return key;
+            }
             
         </script>
     </body>
