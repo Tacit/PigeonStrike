@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>Dove sim</title>
+        <title>Pigeon strike</title>
         <meta charset="utf-8">
     </head>
     <script src="pixi.min.js"></script>
@@ -12,7 +12,7 @@
             resources = PIXI.loader.resources,
             Sprite = PIXI.Sprite,
             Rectangle = PIXI.Rectangle;
-            let pigion = null;
+            let pigeon = null;
             let state;
 
             let type = "WebGL"
@@ -50,27 +50,27 @@
                     resources.background.texture
                 );
                 
-                pigion = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);
-                pigion.gotoAndPlay(0);
-                pigion.animationSpeed=0.3;
-                pigion.baseScale = 0.2;
-                pigion.scale.x = pigion.baseScale;
-                pigion.scale.y = pigion.baseScale;
-                pigion.anchor.x = 0.5;
-                pigion.anchor.y = 0.5;
-                pigion.y = height/2;
-                pigion.x = width/2;
-                pigion.direction = 1;
-                pigion.vx = 0;
-                pigion.vy = 0.05;
-                pigion.isOnGround = false;
+                pigeon = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);
+                pigeon.gotoAndPlay(0);
+                pigeon.animationSpeed=0.3;
+                pigeon.baseScale = 0.2;
+                pigeon.scale.x = pigeon.baseScale;
+                pigeon.scale.y = pigeon.baseScale;
+                pigeon.anchor.x = 0.5;
+                pigeon.anchor.y = 0.5;
+                pigeon.y = height/2;
+                pigeon.x = width/2;
+                pigeon.direction = 1;
+                pigeon.vx = 0;
+                pigeon.vy = 0.05;
+                pigeon.isOnGround = false;
 
 
                 background.width = width;
                 background.height = height;
 
                 app.stage.addChild(background);
-                app.stage.addChild(pigion);
+                app.stage.addChild(pigeon);
 
                 let left = keyboard(37),
                     up = keyboard(38),
@@ -79,56 +79,56 @@
                     space = keyboard(32);
 
                 space.press = () => {
-                    alert(pigion.y);
+                    alert(pigeon.y);
                 }
 
                 right.press = () => {
-                    pigion.vx = 1;
+                    pigeon.vx = 1;
                     
-                    if(pigion.direction === -1){
-                        pigion.rotation = 0;
-                        pigion.scale.x *= -1;
+                    if(pigeon.direction === -1){
+                        pigeon.rotation = 0;
+                        pigeon.scale.x *= -1;
                     }
-                    pigion.direction = 1;
+                    pigeon.direction = 1;
                 };
                 right.release = () => {
-                    pigion.vx = 0;
+                    pigeon.vx = 0;
                 };
 
                 left.press = () => {
-                    pigion.vx = -1;
-                    if(pigion.direction === 1){
-                        pigion.rotation = 0;
-                        pigion.scale.x *= -1;
+                    pigeon.vx = -1;
+                    if(pigeon.direction === 1){
+                        pigeon.rotation = 0;
+                        pigeon.scale.x *= -1;
                     }
-                    pigion.direction = -1;
+                    pigeon.direction = -1;
                 };
                 left.release = () => {
-                    pigion.vx = 0;
+                    pigeon.vx = 0;
                 };
 
                 up.press = () => {
-                    pigion.vy = -0.7;
-                    pigion.vx += 0.3 * pigion.direction;
-                    pigion.rotation = pigion.direction * -Math.PI /8;
+                    pigeon.vy = -0.7;
+                    pigeon.vx += 0.3 * pigeon.direction;
+                    pigeon.rotation = pigeon.direction * -Math.PI /8;
                 };
                 up.release = () => {
-                    pigion.vy = 0.1;
-                    pigion.vx = !left.isDown && !right.isDown ? 0 : pigion.vx - 0.3 * pigion.direction;
-                    pigion.rotation = 0;
+                    pigeon.vy = 0.1;
+                    pigeon.vx = !left.isDown && !right.isDown ? 0 : pigeon.vx - 0.3 * pigeon.direction;
+                    pigeon.rotation = 0;
                 };
 
                 down.press = () => {
-                    if(pigion.isOnGround)
+                    if(pigeon.isOnGround)
                         return;
-                    pigion.vy = 1;
-                    pigion.vx += 0.8 * pigion.direction;
-                    pigion.rotation = pigion.direction * Math.PI /4;
+                    pigeon.vy = 1;
+                    pigeon.vx += 0.8 * pigeon.direction;
+                    pigeon.rotation = pigeon.direction * Math.PI /4;
                 };
                 down.release = () => {
-                    pigion.vy = 0.1;
-                    pigion.vx = !left.isDown && !right.isDown ? 0 : pigion.vx - 0.8 * pigion.direction;
-                    pigion.rotation = 0;
+                    pigeon.vy = 0.1;
+                    pigeon.vx = !left.isDown && !right.isDown ? 0 : pigeon.vx - 0.8 * pigeon.direction;
+                    pigeon.rotation = 0;
                 };
 
                 state = play
@@ -157,19 +157,19 @@
             }
 
             function updatePlayer(delta){
-                pigion.x += pigion.vx;
-                pigion.y += pigion.vy;  
+                pigeon.x += pigeon.vx;
+                pigeon.y += pigeon.vy;  
 
-                if(pigion.y <= 10)
-                    pigion.y = 10;
-                if(pigion.y >= 415) {
-                    pigion.y = 415;
-                    pigion.gotoAndStop(7);
-                    pigion.isOnGround = true;
+                if(pigeon.y <= 10)
+                    pigeon.y = 10;
+                if(pigeon.y >= 415) {
+                    pigeon.y = 415;
+                    pigeon.gotoAndStop(7);
+                    pigeon.isOnGround = true;
                 } else {
-                    if(!pigion.playing){
-                        pigion.play();
-                        pigion.isOnGround = false;
+                    if(!pigeon.playing){
+                        pigeon.play();
+                        pigeon.isOnGround = false;
                     }
                 }
             }
