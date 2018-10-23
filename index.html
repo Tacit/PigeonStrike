@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Dove sim</title>
+        <meta charset="utf-8">
+    </head>
+    <script src="pixi.min.js"></script>
+    <body>
+        <script type="text/javascript">
+            let Application = PIXI.Application,
+            loader = PIXI.loader,
+            resources = PIXI.loader.resources,
+            Sprite = PIXI.Sprite,
+            Rectangle = PIXI.Rectangle;
+            let pigion = null;
+
+            let type = "WebGL"
+            let width = window.innerWidth - 20;
+            let height = window.innerHeight - 20;
+            if(!PIXI.utils.isWebGLSupported()){
+            type = "canvas"
+            }
+    
+            PIXI.utils.sayHello(type)
+            let app = new Application({width: 1024, 
+                height: 600, 
+                antialias: true,
+                transparent: false,
+                resolution: 1});
+            app.renderer.backgroundColor = 0x0000FF;
+            app.renderer.view.style.position = "absolute";
+            app.renderer.view.style.display = "block";
+            app.renderer.autoResize = true;
+            app.renderer.resize(width, height);
+
+            loader.add([{name: "background", url: "town.jpeg"},
+                        {name: "spritesheet", url: "spritesheet.json"}])
+                .on("progress", loadProgressHandler)
+                .load(setup);
+
+            function loadProgressHandler(loader, resource ) {
+                console.log("loading: " + resource.url); 
+                console.log("progress: " + loader.progress + "%");
+            }
+
+            function setup() {
+                
+                let background = new PIXI.Sprite(
+                    resources.background.texture
+                );
+                
+                pigion = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);
+                pigion.gotoAndPlay(0);
+                pigion.animationSpeed=0.3;
+                pigion.scale.x = 0.5;
+                pigion.scale.y = 0.5;
+
+                background.width = width;
+                background.height = height;
+
+                app.stage.addChild(background);
+                app.stage.addChild(pigion);
+
+            }
+
+            function createAnimatedSprite(sheet, frameName , startFrame, frameCount) {
+                let frames = [], i;
+                for(i = startFrame ; i <= frameCount; i++)
+                {
+                    let texture = sheet.textures[frameName + i + '.png'];
+                    frames.push(texture);
+                }
+
+                return new PIXI.extras.AnimatedSprite(frames);
+            }
+                
+            function gameLoop(delta){
+                requestAnimationFrame(gameLoop);
+                if(pigion != null)
+                    pigion.x += 1;
+            }
+
+            gameLoop();
+            
+            document.body.appendChild(app.view);
+            
+        </script>
+    </body>
+</html>
