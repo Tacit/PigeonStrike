@@ -8,7 +8,8 @@ let Application = PIXI.Application,
     let app = null;
     let width = 800;
     let height = 600;
-    let poo = null;
+    let poos = [];
+    let poosOnGround = [];
 
 function gameStart(){
     let type = "WebGL"
@@ -31,7 +32,8 @@ function gameStart(){
 
     loader.add([{name: "background", url: "town.jpeg"},
                 {name: "spritesheet", url: "spritesheet.json"},
-                {name: "poo",  url: "poo.png"}])
+                {name: "poo",  url: "poo.png"},
+                {name: "pooOnGround",  url: "poo1.png"}])
 
         .on("progress", loadProgressHandler)
         .load(setup);
@@ -47,12 +49,8 @@ function setup() {
     
     let background = new PIXI.Sprite(
         resources.background.texture
-    );
+    ); 
 
-    poo = new PIXI.Sprite(
-        resources.poo.texture
-    );
-    
     pigeon = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);
     pigeon.gotoAndPlay(0);
     pigeon.animationSpeed=0.3;
@@ -67,7 +65,6 @@ function setup() {
     pigeon.vx = 0;
     pigeon.vy = 0.05;
     pigeon.isOnGround = false;
-
 
     background.width = width;
     background.height = height;
@@ -85,6 +82,9 @@ function setup() {
         
     }
     space.release = () => {
+        let poo = new PIXI.Sprite(
+            resources.poo.texture
+        );
         poo.x = pigeon.x;
         poo.y = pigeon.y;
         poo.vx = pigeon.vx;
@@ -92,6 +92,7 @@ function setup() {
         poo.scale.x = 0.1;
         poo.scale.y = 0.1;  
         app.stage.addChild(poo);
+        poos.push(poo);
     }
 
     right.press = () => {
@@ -170,9 +171,28 @@ function play(delta){
 }
 
 function updatePoo(delta) {
-    poo.x += poo.vx;
-    poo.y += poo.vy;
-    poo.vy += 0.08;
+    poos.forEach(poo => {
+        poo.x += poo.vx;
+        poo.y += poo.vy;
+        poo.vy += 0.08;  
+    });
+
+    let pooToRemove = poos.filter( p => p.y > 500);
+    pooToRemove.forEach( p => {
+        let poo = new PIXI.Sprite(
+            resources.pooOnGround.texture
+        );
+        poo.x = p.x;
+        poo.y = p.y;
+        poo.scale.x = 0.1;
+        poo.scale.y = 0.1;
+
+        poosOnGround.push(poo);
+        app.stage.addChild(poo);
+        app.stage.removeChild(p)
+    });
+
+    poos = poos.filter( p => p.y < 500);
 }
 
 function updatePlayer(delta){
