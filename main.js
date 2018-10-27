@@ -8,6 +8,7 @@ let Application = PIXI.Application,
     let app = null;
     let width = 800;
     let height = 600;
+    let poo = null;
 
 function gameStart(){
     let type = "WebGL"
@@ -29,7 +30,9 @@ function gameStart(){
     app.renderer.resize(width, height);
 
     loader.add([{name: "background", url: "town.jpeg"},
-                {name: "spritesheet", url: "spritesheet.json"}])
+                {name: "spritesheet", url: "spritesheet.json"},
+                {name: "poo",  url: "poo.png"}])
+
         .on("progress", loadProgressHandler)
         .load(setup);
 
@@ -44,6 +47,10 @@ function setup() {
     
     let background = new PIXI.Sprite(
         resources.background.texture
+    );
+
+    poo = new PIXI.Sprite(
+        resources.poo.texture
     );
     
     pigeon = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);
@@ -75,7 +82,16 @@ function setup() {
         space = keyboard(32);
 
     space.press = () => {
-        alert(pigeon.y);
+        
+    }
+    space.release = () => {
+        poo.x = pigeon.x;
+        poo.y = pigeon.y;
+        poo.vx = pigeon.vx;
+        poo.vy = pigeon.vy;
+        poo.scale.x = 0.1;
+        poo.scale.y = 0.1;  
+        app.stage.addChild(poo);
     }
 
     right.press = () => {
@@ -150,6 +166,13 @@ function gameLoop(delta){
 
 function play(delta){
     updatePlayer(delta);
+    updatePoo(delta);
+}
+
+function updatePoo(delta) {
+    poo.x += poo.vx;
+    poo.y += poo.vy;
+    poo.vy += 0.08;
 }
 
 function updatePlayer(delta){
@@ -169,9 +192,6 @@ function updatePlayer(delta){
         }
     }
 }
-
-
-
 
 function keyboard(keyCode) {
     let key = {};
