@@ -10,6 +10,7 @@ let Application = PIXI.Application,
     let height = 600;
     let poos = [];
     let poosOnGround = [];
+    let man = null;
 
 function gameStart(){
     let type = "WebGL"
@@ -33,6 +34,7 @@ function gameStart(){
     loader.add([{name: "background", url: "town.jpeg"},
                 {name: "spritesheet", url: "spritesheet.json"},
                 {name: "poo",  url: "poo.png"},
+                {name: "buisnessmansheet", url: "buisnessman.json"},
                 {name: "pooOnGround",  url: "poo1.png"}])
 
         .on("progress", loadProgressHandler)
@@ -51,7 +53,7 @@ function setup() {
         resources.background.texture
     ); 
 
-    pigeon = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);
+    pigeon = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);    
     pigeon.gotoAndPlay(0);
     pigeon.animationSpeed=0.3;
     pigeon.baseScale = 0.2;
@@ -69,8 +71,19 @@ function setup() {
     background.width = width;
     background.height = height;
 
+    man = createAnimatedSprite(resources.buisnessmansheet, 'b', 0, 7);
+    man.x = 0;
+    man.scale.x = 0.5;
+    man.scale.y = 0.5;
+    man.y =  470;
+    man.animationSpeed = 0.1;
+    man.vx = 0.5;
+    man.gotoAndPlay(0);
+
     app.stage.addChild(background);
     app.stage.addChild(pigeon);
+
+    app.stage.addChild(man);
 
     let left = keyboard(37),
         up = keyboard(38),
@@ -170,6 +183,7 @@ function gameLoop(delta){
 function play(delta){
     updatePlayer(delta);
     updatePoo(delta);
+    man.x += man.vx;
 }
 
 function updatePoo(delta) {
