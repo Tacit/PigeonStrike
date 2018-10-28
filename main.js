@@ -82,6 +82,8 @@ function setup() {
         
     }
     space.release = () => {
+        if(pigeon.isOnGround)
+            return;
         let poo = new PIXI.Sprite(
             resources.poo.texture
         );
@@ -201,8 +203,8 @@ function updatePlayer(delta){
 
     if(pigeon.y <= 10)
         pigeon.y = 10;
-    if(pigeon.y >= 415) {
-        pigeon.y = 415;
+    if(pigeon.y >= 500) {
+        pigeon.y = 500;
         pigeon.gotoAndStop(7);
         pigeon.isOnGround = true;
     } else {
