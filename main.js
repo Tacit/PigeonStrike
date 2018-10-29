@@ -41,8 +41,16 @@ function gameStart(){
         .load(setup);
 
     function loadProgressHandler(loader, resource ) {
+        let progress = document.getElementById("progress");
+        let progressBar = document.getElementById("progressBar");
+        progressBar.style.width = loader.progress + "%";
+        progress.innerText = loader.progress;
         console.log("loading: " + resource.url); 
         console.log("progress: " + loader.progress + "%");
+        if(loader.progress === 100) {
+            let loadingScreen = document.getElementById("loadingScreen");
+            loadingScreen.style.display = "none";
+        }
     }
     document.body.appendChild(app.view);
 }

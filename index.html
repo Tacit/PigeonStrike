@@ -7,6 +7,16 @@
     <script src="pixi.min.js"></script>
     <script src="main.js"></script>
     <body>
+        <div style="height:600px;width: 800px;background: blue;" id="loadingScreen">
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;align-items: center;font-size: xx-large;font-weight: bold;color: yellow;">
+                <span>Loading :</span>
+                <span id="progress">0</span>
+                <span>%</span>
+            </div>
+            <div style="height:100%; width:0%; background:red" id="progressBar">
+
+            </div>
+        </div>
         <script>
             gameStart();
         </script>
