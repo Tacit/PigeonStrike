@@ -53,6 +53,14 @@ function setup() {
         resources.background.texture
     ); 
 
+    app.stage.updateLayersOrder = function () {
+        app.stage.children.sort(function(a,b) {
+            a.z = a.z || 0;
+            b.z = b.z || 0;
+            return b.z - a.z
+        });
+    };
+
     pigeon = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);    
     pigeon.gotoAndPlay(0);
     pigeon.animationSpeed=0.3;
@@ -67,9 +75,11 @@ function setup() {
     pigeon.vx = 0;
     pigeon.vy = 0.05;
     pigeon.isOnGround = false;
+    pigeon.z = 50;
 
     background.width = width;
     background.height = height;
+    background.z = 100;
 
     man = createAnimatedSprite(resources.buisnessmansheet, 'b', 0, 7);
     man.x = 0;
@@ -79,6 +89,7 @@ function setup() {
     man.animationSpeed = 0.1;
     man.vx = 0.5;
     man.gotoAndPlay(0);
+    man.z = 1;
 
     app.stage.addChild(background);
     app.stage.addChild(pigeon);
@@ -106,7 +117,9 @@ function setup() {
         poo.vy = pigeon.vy;
         poo.scale.x = 0.1;
         poo.scale.y = 0.1;  
+        poo.z = 10;
         app.stage.addChild(poo);
+        app.stage.updateLayersOrder();
         poos.push(poo);
     }
 
@@ -160,6 +173,7 @@ function setup() {
     };
 
     state = play
+    app.stage.updateLayersOrder();
     gameLoop();
 }
 
@@ -181,6 +195,7 @@ function gameLoop(delta){
 }
 
 function play(delta){
+    app.stage.child
     updatePlayer(delta);
     updatePoo(delta);
     man.x += man.vx;
@@ -202,10 +217,11 @@ function updatePoo(delta) {
         poo.y = p.y;
         poo.scale.x = 0.1;
         poo.scale.y = 0.1;
-
+        poo.z = 10;
         poosOnGround.push(poo);
         app.stage.addChild(poo);
         app.stage.removeChild(p)
+        app.stage.updateLayersOrder();
     });
 
     poos = poos.filter( p => p.y < 500);
@@ -264,4 +280,8 @@ function keyboard(keyCode) {
         "keyup", key.upHandler.bind(key), false
     );
     return key;
+}
+
+function SortStageZorder() {
+    
 }
