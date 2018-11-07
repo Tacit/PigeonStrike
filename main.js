@@ -14,7 +14,7 @@ let Application = PIXI.Application,
 
 function gameStart(){
     let type = "WebGL"
-    
+ 
     if(!PIXI.utils.isWebGLSupported()){
     type = "canvas"
     }
@@ -56,10 +56,10 @@ function gameStart(){
 }
 
 function setup() {
-    
+
     let background = new PIXI.Sprite(
         resources.background.texture
-    ); 
+    );
 
     app.stage.updateLayersOrder = function () {
         app.stage.children.sort(function(a,b) {
@@ -69,7 +69,7 @@ function setup() {
         });
     };
 
-    pigeon = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);    
+    pigeon = createAnimatedSprite(resources.spritesheet, 'p', 1, 9);
     pigeon.gotoAndPlay(0);
     pigeon.animationSpeed=0.3;
     pigeon.baseScale = 0.2;
@@ -111,7 +111,7 @@ function setup() {
         space = keyboard(32);
 
     space.press = () => {
-        
+
     }
     space.release = () => {
         if(pigeon.isOnGround)
@@ -124,7 +124,7 @@ function setup() {
         poo.vx = pigeon.vx;
         poo.vy = pigeon.vy;
         poo.scale.x = 0.1;
-        poo.scale.y = 0.1;  
+        poo.scale.y = 0.1;
         poo.z = 10;
         app.stage.addChild(poo);
         app.stage.updateLayersOrder();
@@ -133,7 +133,7 @@ function setup() {
 
     right.press = () => {
         pigeon.vx = 1;
-        
+
         if(pigeon.direction === -1){
             pigeon.rotation = 0;
             pigeon.scale.x *= -1;
@@ -195,7 +195,7 @@ function createAnimatedSprite(sheet, frameName , startFrame, frameCount) {
 
     return new PIXI.extras.AnimatedSprite(frames);
 }
-    
+
 function gameLoop(delta){
     requestAnimationFrame(gameLoop);
 
@@ -213,7 +213,7 @@ function updatePoo(delta) {
     poos.forEach(poo => {
         poo.x += poo.vx;
         poo.y += poo.vy;
-        poo.vy += 0.08;  
+        poo.vy += 0.08;
     });
 
     let pooToRemove = poos.filter( p => p.y > 500);
@@ -237,7 +237,7 @@ function updatePoo(delta) {
 
 function updatePlayer(delta){
     pigeon.x += pigeon.vx;
-    pigeon.y += pigeon.vy;  
+    pigeon.y += pigeon.vy;
 
     if(pigeon.y <= 10)
         pigeon.y = 10;
@@ -266,7 +266,7 @@ function keyboard(keyCode) {
         if (key.isUp && key.press) key.press();
         key.isDown = true;
         key.isUp = false;
-            
+
         event.preventDefault();}
     };
 
@@ -276,7 +276,7 @@ function keyboard(keyCode) {
         if (key.isDown && key.release) key.release();
         key.isDown = false;
         key.isUp = true;
-        
+
         event.preventDefault();}
     };
 
@@ -288,8 +288,4 @@ function keyboard(keyCode) {
         "keyup", key.upHandler.bind(key), false
     );
     return key;
-}
-
-function SortStageZorder() {
-    
 }
