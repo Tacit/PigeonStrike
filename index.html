@@ -1,24 +1,25 @@
-<!doctype html>
-<html>
-    <head>
-        <title>Pigeon strike</title>
-        <meta charset="utf-8">
-    </head>
-    <script src="pixi.min.js"></script>
-    <script src="main.js"></script>
-    <body>
-        <div style="height:600px;width: 800px;background: blue;" id="loadingScreen">
-            <div style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;align-items: center;font-size: xx-large;font-weight: bold;color: yellow;">
-                <span>Loading :</span>
-                <span id="progress">0</span>
-                <span>%</span>
-            </div>
-            <div style="height:100%; width:0%; background:red" id="progressBar">
-
-            </div>
-        </div>
-        <script>
-            gameStart();
-        </script>
-    </body>
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | PigeonStike</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>  
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "Build/web.json", {onProgress: UnityProgress});
+    </script>
+  </head>
+  <body>
+    <div class="webgl-content">
+      <div id="gameContainer" style="width: 960px; height: 600px"></div>
+      <div class="footer">
+        <div class="webgl-logo"></div>
+        <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+        <div class="title">PigeonStike</div>
+      </div>
+    </div>
+  </body>
 </html>

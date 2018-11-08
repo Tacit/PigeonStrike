@@ -1,0 +1,6 @@
+releases/
+.vs/
+*.csproj
+src/Library/
+src/Packages/
+src/obj/
